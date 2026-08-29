@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '../../components/ui/icons';
 
-const SYMBOLS = '!<>-_\\/[]{}—=+*^?#________';
+const SYMBOLS = '!<>-_\\/[]@{}—$=+*^?#________';
 const WORDS = ["developers", "fast startups", "agile teams", "enterprises", "innovators", "agencies"];
 const SCRAMBLE_SPEED = 30; // ms per frame update
 const WORD_DELAY = 2500;   // how long to wait on a finished word
