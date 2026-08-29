@@ -29,7 +29,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <img src="/logos/harbor_logo.svg" alt="Harbor Logo" className="h-5 lg:h-9 w-auto group-hover:opacity-80 transition-opacity" />
+          <img src="/logos/harbor_light_notext.svg" alt="Harbor Logo" className="h-5 lg:h-12 w-auto group-hover:opacity-80 transition-opacity" />
           <span className="text-xl lg:text-2xl font-medium tracking-tight">Harbor™</span>
         </Link>
 
