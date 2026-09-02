@@ -19,11 +19,11 @@ jobs:
 
     - name: Generate .env file
       run: |
-        echo "POSTGRES_SERVER=${{ vars.POSTGRES_SERVER }}" >> .env
-        echo "POSTGRES_PORT=${{ vars.POSTGRES_PORT }}" >> .env
-        echo "POSTGRES_DATABASE=${{ vars.POSTGRES_DATABASE }}" >> .env
-        echo "POSTGRES_USER=${{ vars.POSTGRES_USER }}" >> .env
-        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "MYSQL_SERVER=${{ vars.MYSQL_SERVER }}" >> .env
+        echo "MYSQL_PORT=${{ vars.MYSQL_PORT }}" >> .env
+        echo "MYSQL_DATABASE=${{ vars.MYSQL_DATABASE }}" >> .env
+        echo "MYSQL_USER=${{ vars.MYSQL_USER }}" >> .env
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
         echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
         echo "JWT_ISSUER=${{ vars.JWT_ISSUER }}" >> .env
         echo "JWT_AUDIENCE=${{ vars.JWT_AUDIENCE }}" >> .env
