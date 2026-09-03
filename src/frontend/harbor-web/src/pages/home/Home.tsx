@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '../../components/ui/icons';
+import ThemeToggle from '../../components/ui/ThemeToggle';
 
 const SYMBOLS = '!<>-_\\/[]@{}—$=+*^?#________';
 const WORDS = ["developers", "fast startups", "agile teams", "enterprises", "innovators", "agencies"];
@@ -85,7 +86,7 @@ const DynamicHeading = () => {
   }, [wordIndex]);
 
   return (
-    <h1 className="font-['Roobert',sans-serif] font-roobert text-[56px] lg:text-[80px] text-white leading-[1.05] tracking-tight font-light text-left">
+    <h1 className="font-['Roobert',sans-serif] font-roobert text-[56px] lg:text-[80px] text-gray-900 dark:text-white leading-[1.05] tracking-tight font-light text-left">
       The deployment<br />
       platform built for<br />
       <div className="mt-1 flex flex-wrap items-center">
@@ -94,7 +95,7 @@ const DynamicHeading = () => {
         </span>
         {/* The Exact Block Cursor */}
         <div className="inline-flex h-[1em] w-[0.6ch] items-center align-middle ml-2 opacity-100 animate-blink">
-          <div className="h-[90%] w-full bg-white"></div>
+          <div className="h-[90%] w-full bg-black dark:bg-white"></div>
         </div>
       </div>
     </h1>
@@ -102,19 +103,21 @@ const DynamicHeading = () => {
 };
 
 export default function Home() {
+  const isLoggedIn = !!localStorage.getItem('harbor_token');
+
   return (
-    <div className="w-full h-full flex flex-col items-start justify-start px-5 lg:px-[78px] pt-16 lg:pt-[120px]">
+    <div className="w-full min-h-screen flex flex-col items-start px-5 lg:px-[78px] pt-[150px] lg:pt-[30vh]">
       <div className="w-full max-w-[1920px] mx-auto flex flex-col justify-start">
         <DynamicHeading />
         
-        <p className="mt-6 lg:mt-8 text-[18px] lg:text-[22px] text-[#a1a1aa] font-light max-w-[650px] leading-[1.6] font-sans">
+        <p className="mt-6 lg:mt-8 text-[18px] lg:text-[22px] text-gray-600 dark:text-[#a1a1aa] font-light max-w-[650px] leading-[1.6] font-sans">
           Centralize your DevOps lifecycle. Manage projects, configure environments, and monitor application deployments through a single, intuitive dashboard.
         </p>
         
         <div className="mt-10 lg:mt-12 flex items-center">
           <Link 
-            to="/register" 
-            className="ease transition-colors group relative z-[1] flex cursor-pointer items-center overflow-hidden whitespace-nowrap justify-between motion-safe:duration-150 motion-reduce:duration-0 lg:motion-safe:duration-300 lg:motion-reduce:duration-0 bg-[#ffffff] text-[#0d0d0d] dark:lg:hover:text-white dark:active:text-white dark:focus-visible:text-white h-[70px] text-[20px] py-[20px] px-[24px] gap-[15px] lg:[--button-arrow-offset:2px] font-sans"
+            to={isLoggedIn ? "/dashboard" : "/register"} 
+            className="ease transition-colors group relative z-[1] flex cursor-pointer items-center overflow-hidden whitespace-nowrap justify-between motion-safe:duration-150 motion-reduce:duration-0 lg:motion-safe:duration-300 lg:motion-reduce:duration-0 bg-gray-900 dark:bg-white text-white dark:text-black hover:text-white dark:hover:text-white lg:hover:text-white dark:lg:hover:text-white h-[70px] text-[20px] py-[20px] px-[24px] gap-[15px] lg:[--button-arrow-offset:2px] font-sans"
             style={{ letterSpacing: '0.2px', lineHeight: '150%' }}
           >
             {/* Animated Background Layer */}
@@ -126,7 +129,7 @@ export default function Home() {
             <span 
               className="ease relative z-[1] inline-block transition-transform motion-safe:duration-300 translate-x-0 group-hover:translate-x-[var(--button-arrow-offset)]"
             >
-              Get Started
+              {isLoggedIn ? 'Dashboard' : 'Get Started'}
             </span>
 
             {/* SVG Icon */}
@@ -135,6 +138,7 @@ export default function Home() {
         </div>
 
       </div>
+      <ThemeToggle />
     </div>
   );
 }

@@ -4,6 +4,8 @@
   --font-sans: "PP Neue Montreal", sans-serif;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: 'PP Neue Montreal';
   src: url('/fonts/ppneuemontreal-book.otf') format('opentype');
@@ -85,6 +87,13 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
+  color: #090909;
+}
+
+html.dark body {
+  background-color: #090909;
+  color: white;
 }
 
 @keyframes blink {
