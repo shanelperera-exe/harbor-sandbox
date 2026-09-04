@@ -34,6 +34,30 @@ export default function CreateAccount() {
         throw new Error(data?.message || 'Account creation failed.');
       }
 
+      // Automatically login the user after successful registration
+      const loginResponse = await fetch(`${authApiBase}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const loginData = await loginResponse.json().catch(() => ({}));
+
+      if (!loginResponse.ok) {
+        // If auto-login fails, redirect to login page so they can try manually
+        navigate('/login');
+        return;
+      }
+
+      localStorage.setItem('harbor_token', loginData.token);
+      localStorage.setItem('harbor_user', JSON.stringify({
+        username: loginData.username,
+        role: loginData.role,
+        avatarSvg: loginData.avatarSvg ?? null,
+      }));
+
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to create account.');
@@ -89,7 +113,7 @@ export default function CreateAccount() {
                 <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Username</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-black dark:text-[#8f8f8f] transition-colors duration-300" />
+                    <User className="h-5 w-5 text-gray-400 dark:text-[#8f8f8f] transition-colors duration-300" />
                   </div>
                   <input
                     type="text"
@@ -104,16 +128,16 @@ export default function CreateAccount() {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label className="text-[15px] font-medium text-white">Email</label>
+                <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Email</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-[#8f8f8f]" />
+                    <Mail className="h-5 w-5 text-gray-400 dark:text-[#8f8f8f] transition-colors duration-300" />
                   </div>
                   <input
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    className="h-12 w-full bg-transparent border border-[#6b6b6b] text-[#f0f0f0] pl-10 pr-3 focus:outline-none focus:border-[#f0f0f0] focus:ring-1 focus:ring-[#f0f0f0] transition-colors placeholder:text-[#8f8f8f]"
+                    className="h-12 w-full bg-transparent border border-black dark:border-[#6b6b6b] text-black dark:text-[#f0f0f0] pl-10 pr-3 focus:outline-none focus:border-black dark:focus:border-[#f0f0f0] focus:ring-1 focus:ring-black dark:focus:ring-[#f0f0f0] transition-colors placeholder:text-gray-400 dark:placeholder:text-[#8f8f8f]"
                     placeholder="your@email.com"
                     autoComplete="email"
                     required
@@ -125,7 +149,7 @@ export default function CreateAccount() {
                 <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Key className="h-5 w-5 text-black dark:text-[#8f8f8f] transition-colors duration-300" />
+                    <Key className="h-5 w-5 text-gray-400 dark:text-[#8f8f8f] transition-colors duration-300" />
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -139,7 +163,7 @@ export default function CreateAccount() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-black dark:text-[#8f8f8f] hover:text-black dark:hover:text-white transition-colors duration-300"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-[#8f8f8f] hover:text-black dark:hover:text-white transition-colors duration-300"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -147,14 +171,14 @@ export default function CreateAccount() {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label className="text-[15px] font-medium text-white">Role</label>
+                <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Role</label>
                 <select
                   value={role}
                   onChange={(event) => setRole(event.target.value)}
-                  className="h-12 w-full bg-transparent border border-[#6b6b6b] text-[#f0f0f0] px-3 focus:outline-none focus:border-[#f0f0f0] focus:ring-1 focus:ring-[#f0f0f0] transition-colors"
+                  className="h-12 w-full bg-transparent border border-black dark:border-[#6b6b6b] text-black dark:text-[#f0f0f0] px-3 focus:outline-none focus:border-black dark:focus:border-[#f0f0f0] focus:ring-1 focus:ring-black dark:focus:ring-[#f0f0f0] transition-colors"
                 >
-                  <option value="Developer" className="bg-[#090909]">Developer</option>
-                  <option value="Viewer" className="bg-[#090909]">Viewer</option>
+                  <option value="Developer" className="bg-white dark:bg-[#090909] text-black dark:text-[#f0f0f0]">Developer</option>
+                  <option value="Viewer" className="bg-white dark:bg-[#090909] text-black dark:text-[#f0f0f0]">Viewer</option>
                 </select>
               </div>
 

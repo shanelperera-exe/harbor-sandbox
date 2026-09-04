@@ -33,7 +33,13 @@ export default function Login() {
       }
 
       localStorage.setItem('harbor_token', data.token);
-      localStorage.setItem('harbor_user', JSON.stringify({ username: data.username, role: data.role }));
+      localStorage.setItem('harbor_user', JSON.stringify({
+        username: data.username,
+        email: data.email ?? '',
+        role: data.role,
+        avatarSvg: data.avatarSvg ?? null,
+      }));
+      window.dispatchEvent(new Event('storage'));
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to sign in.');
@@ -89,7 +95,7 @@ export default function Login() {
                 <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Username</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-black dark:text-[#8f8f8f] transition-colors duration-300" />
+                    <User className="h-5 w-5 text-gray-400 dark:text-[#8f8f8f] transition-colors duration-300" />
                   </div>
                   <input
                     type="text"
@@ -107,7 +113,7 @@ export default function Login() {
                 <label className="text-[15px] font-medium text-black dark:text-white transition-colors duration-300">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Key className="h-5 w-5 text-black dark:text-[#8f8f8f] transition-colors duration-300" />
+                    <Key className="h-5 w-5 text-gray-400 dark:text-[#8f8f8f] transition-colors duration-300" />
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -121,7 +127,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-black dark:text-[#8f8f8f] hover:text-black dark:hover:text-white transition-colors duration-300"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-[#8f8f8f] hover:text-black dark:hover:text-white transition-colors duration-300"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>

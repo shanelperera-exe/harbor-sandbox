@@ -1,12 +1,362 @@
-export default function DashboardHeader() {
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { 
+  IconProjects, IconBlueprints, IconGroups, 
+  IconObservability, IconWebhooks, IconSettings 
+} from './SideNav';
+import UserAvatar from '../ui/UserAvatar';
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+function IconSettings2() {
   return (
-    <header data-testid="ribbonnav" role="banner" className="sticky top-0 z-[30] w-full flex h-16 pe-3 sm:pe-4 bg-white dark:bg-[#090909] text-gray-900 dark:text-white border-b border-solid border-gray-200 dark:border-[#333] transition-colors duration-300">
-      <div className="flex-shrink-0 inline-flex items-center sm:gap-x-3 px-3 sm:px-4 h-full border-r border-gray-200 sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] bg-white dark:bg-[#090909] transition-colors duration-300" style={{ width: '310px' }}>
+    <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M13.5 8.38008C13.5 8.25508 13.5 8.13008 13.5 8.00008C13.5 7.87008 13.5 7.74508 13.5 7.61508L14.46 6.77508C14.637 6.61911 14.7531 6.40559 14.7879 6.17228C14.8226 5.93897 14.7738 5.70088 14.65 5.50008L13.47 3.50008C13.3823 3.34821 13.2562 3.22207 13.1044 3.13431C12.9526 3.04655 12.7804 3.00026 12.605 3.00008C12.4963 2.99925 12.3882 3.01614 12.285 3.05008L11.07 3.46008C10.8602 3.32068 10.6414 3.19541 10.415 3.08508L10.16 1.82508C10.1143 1.59488 9.98905 1.3881 9.80623 1.24093C9.62341 1.09376 9.39466 1.01558 9.16 1.02008H6.82C6.58535 1.01558 6.3566 1.09376 6.17378 1.24093C5.99096 1.3881 5.86573 1.59488 5.82 1.82508L5.565 3.08508C5.33697 3.19538 5.11649 3.32066 4.905 3.46008L3.715 3.03008C3.61065 3.00289 3.50259 2.99276 3.395 3.00008C3.21964 3.00026 3.04741 3.04655 2.89559 3.13431C2.74376 3.22207 2.61769 3.34821 2.53 3.50008L1.35 5.50008C1.2333 5.70058 1.18993 5.93541 1.22733 6.16436C1.26473 6.39332 1.38057 6.60214 1.555 6.75508L2.5 7.62008C2.5 7.74508 2.5 7.87008 2.5 8.00008C2.5 8.13008 2.5 8.25508 2.5 8.38508L1.555 9.22508C1.37564 9.37908 1.25663 9.59165 1.2191 9.82505C1.18158 10.0585 1.22795 10.2976 1.35 10.5001L2.53 12.5001C2.61769 12.6519 2.74376 12.7781 2.89559 12.8659C3.04741 12.9536 3.21964 12.9999 3.395 13.0001C3.50368 13.0009 3.61176 12.984 3.715 12.9501L4.93 12.5401C5.13977 12.6795 5.35859 12.8048 5.585 12.9151L5.84 14.1751C5.88573 14.4053 6.01096 14.6121 6.19378 14.7592C6.3766 14.9064 6.60535 14.9846 6.84 14.9801H9.2C9.43466 14.9846 9.66341 14.9064 9.84623 14.7592C10.029 14.6121 10.1543 14.4053 10.2 14.1751L10.455 12.9151C10.683 12.8048 10.9035 12.6795 11.115 12.5401L12.325 12.9501C12.4282 12.984 12.5363 13.0009 12.645 13.0001C12.8204 12.9999 12.9926 12.9536 13.1444 12.8659C13.2962 12.7781 13.4223 12.6519 13.51 12.5001L14.65 10.5001C14.7667 10.2996 14.8101 10.0648 14.7727 9.8358C14.7353 9.60685 14.6194 9.39802 14.445 9.24508L13.5 8.38008ZM12.605 12.0001L10.89 11.4201C10.4885 11.7601 10.0297 12.026 9.535 12.2051L9.18 14.0001H6.82L6.465 12.2251C5.97422 12.0409 5.51786 11.7755 5.115 11.4401L3.395 12.0001L2.215 10.0001L3.575 8.80008C3.48255 8.28251 3.48255 7.75265 3.575 7.23508L2.215 6.00008L3.395 4.00008L5.11 4.58008C5.51147 4.24003 5.97031 3.97421 6.465 3.79508L6.82 2.00008H9.18L9.535 3.77508C10.0258 3.95929 10.4821 4.22465 10.885 4.56008L12.605 4.00008L13.785 6.00008L12.425 7.20008C12.5175 7.71765 12.5175 8.24751 12.425 8.76508L13.785 10.0001L12.605 12.0001Z" />
+      <path d="M8 11.0001C7.40666 11.0001 6.82664 10.8241 6.33329 10.4945C5.83995 10.1648 5.45543 9.69631 5.22837 9.14813C5.0013 8.59995 4.94189 7.99675 5.05765 7.41481C5.1734 6.83287 5.45913 6.29832 5.87868 5.87876C6.29824 5.4592 6.83279 5.17348 7.41473 5.05773C7.99668 4.94197 8.59988 5.00138 9.14805 5.22844C9.69623 5.45551 10.1648 5.84002 10.4944 6.33337C10.8241 6.82672 11 7.40674 11 8.00008C11.004 8.39516 10.9292 8.78707 10.7798 9.15286C10.6305 9.51865 10.4096 9.85096 10.1303 10.1303C9.85089 10.4097 9.51857 10.6305 9.15278 10.7799C8.787 10.9292 8.39508 11.0041 8 11.0001ZM8 6.00008C7.73568 5.99392 7.47285 6.04145 7.22741 6.13978C6.98198 6.23811 6.75904 6.3852 6.57208 6.57216C6.38512 6.75912 6.23803 6.98205 6.1397 7.22749C6.04137 7.47292 5.99385 7.73575 6 8.00008C5.99385 8.26441 6.04137 8.52724 6.1397 8.77267C6.23803 9.01811 6.38512 9.24105 6.57208 9.42801C6.75904 9.61496 6.98198 9.76206 7.22741 9.86039C7.47285 9.95872 7.73568 10.0062 8 10.0001C8.26433 10.0062 8.52716 9.95872 8.7726 9.86039C9.01803 9.76206 9.24097 9.61496 9.42793 9.42801C9.61489 9.24105 9.76198 9.01811 9.86031 8.77267C9.95864 8.52724 10.0062 8.26441 10 8.00008C10.0062 7.73575 9.95864 7.47292 9.86031 7.22749C9.76198 6.98205 9.61489 6.75912 9.42793 6.57216C9.24097 6.3852 9.01803 6.23811 8.7726 6.13978C8.52716 6.04145 8.26433 5.99392 8 6.00008Z" />
+    </svg>
+  );
+}
+
+function IconTheme() {
+  return (
+    <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="17" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 2.51172H2C1.73478 2.51172 1.48043 2.61708 1.29289 2.80461C1.10536 2.99215 1 3.2465 1 3.51172V11.5117C1 11.7769 1.10536 12.0313 1.29289 12.2188C1.48043 12.4064 1.73478 12.5117 2 12.5117H6V14.5117H4V15.5117H12V14.5117H10V12.5117H14C14.2652 12.5117 14.5196 12.4064 14.7071 12.2188C14.8946 12.0313 15 11.7769 15 11.5117V3.51172C15 3.2465 14.8946 2.99215 14.7071 2.80461C14.5196 2.61708 14.2652 2.51172 14 2.51172ZM9 14.5117H7V12.5117H9V14.5117ZM14 11.5117H2V3.51172H14V11.5117Z" />
+    </svg>
+  );
+}
+
+function IconSignOut() {
+  return (
+    <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 15H9C9.26512 14.9997 9.5193 14.8942 9.70677 14.7068C9.89424 14.5193 9.9997 14.2651 10 14V12.5H9V14H3V2H9V3.5H10V2C9.9997 1.73488 9.89424 1.4807 9.70677 1.29323C9.5193 1.10576 9.26512 1.0003 9 1H3C2.73488 1.0003 2.4807 1.10576 2.29323 1.29323C2.10576 1.4807 2.0003 1.73488 2 2V14C2.0003 14.2651 2.10576 14.5193 2.29323 14.7068C2.4807 14.8942 2.73488 14.9997 3 15Z" />
+      <path d="M10.293 10.293L12.086 8.5H5V7.5H12.086L10.293 5.707L11 5L14 8L11 11L10.293 10.293Z" />
+    </svg>
+  );
+}
+
+function IconChevronRight() {
+  return (
+    <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 8L5.99999 13L5.29999 12.3L9.59999 8L5.29999 3.7L5.99999 3L11 8Z" />
+    </svg>
+  );
+}
+
+
+
+
+// ─── Theme helpers ─────────────────────────────────────────────────────────────
+
+type Theme = 'light' | 'dark' | 'system';
+
+function getStoredTheme(): Theme {
+  return (localStorage.getItem('harbor_theme') as Theme) ?? 'system';
+}
+
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+  localStorage.setItem('harbor_theme', theme);
+}
+
+// ─── Profile dropdown ──────────────────────────────────────────────────────────
+
+function ProfileDropdown({
+  username,
+  email,
+  avatarSvg,
+  onClose,
+}: {
+  username: string;
+  email: string;
+  avatarSvg: string | null;
+  onClose: () => void;
+}) {
+  const navigate = useNavigate();
+  // 'main' | 'theme'
+  const [panel, setPanel] = useState<'main' | 'theme'>('main');
+  const [theme, setTheme] = useState<Theme>(getStoredTheme);
+
+  function handleSignOut() {
+    localStorage.removeItem('harbor_token');
+    localStorage.removeItem('harbor_user');
+    onClose();
+    navigate('/login');
+  }
+
+  function handleTheme(t: Theme) {
+    setTheme(t);
+    applyTheme(t);
+  }
+
+  const baseItemClass =
+    'w-full flex relative text-[14px] py-2 px-3 whitespace-nowrap cursor-pointer ' +
+    'hover:bg-gray-100 dark:hover:bg-[#fafafa] ' +
+    'hover:text-gray-900 dark:hover:text-[#272727] ' +
+    'focus:outline-none transition-colors duration-100';
+
+  const activeItemClass =
+    'w-full flex relative text-[14px] py-2 px-3 whitespace-nowrap cursor-pointer ' +
+    'text-blue-600 dark:text-blue-400 ' +
+    'bg-blue-50 dark:bg-blue-950/50 ' +
+    'hover:bg-blue-100 dark:hover:bg-blue-950/50 ' +
+    'hover:text-blue-700 dark:hover:text-blue-300 ' +
+    'focus:outline-none transition-colors duration-100';
+
+
+  const backItemClass =
+    'w-full flex relative text-[14px] py-2 px-3 whitespace-nowrap cursor-pointer ' +
+    'text-gray-400 dark:text-[#b3b3b3] ' +
+    'hover:bg-gray-100 dark:hover:bg-[#fafafa] ' +
+    'hover:text-gray-900 dark:hover:text-[#272727] ' +
+    'focus:outline-none transition-colors duration-100';
+
+  const themeOptions: { value: Theme; label: string; icon: React.ReactNode }[] = [
+    {
+      value: 'system',
+      label: 'System',
+      icon: (
+        <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.00001 11C7.40666 11 6.82664 10.8241 6.3333 10.4944C5.83995 10.1648 5.45543 9.69623 5.22837 9.14805C5.00131 8.59987 4.9419 7.99667 5.05765 7.41473C5.17341 6.83279 5.45913 6.29824 5.87869 5.87868C6.29825 5.45912 6.83279 5.1734 7.41474 5.05764C7.99668 4.94189 8.59988 5.0013 9.14806 5.22836C9.69624 5.45542 10.1648 5.83994 10.4944 6.33329C10.8241 6.82664 11 7.40666 11 8C11.0043 8.39515 10.9296 8.78717 10.7803 9.15307C10.6311 9.51897 10.4102 9.85138 10.1308 10.1308C9.85139 10.4102 9.51898 10.6311 9.15308 10.7803C8.78718 10.9296 8.39516 11.0043 8.00001 11ZM8.00001 6C7.73572 5.99401 7.47297 6.04164 7.22761 6.14003C6.98225 6.23842 6.75937 6.38552 6.57245 6.57244C6.38552 6.75937 6.23843 6.98224 6.14004 7.2276C6.04165 7.47296 5.99401 7.73572 6.00001 8C5.99401 8.26428 6.04165 8.52704 6.14004 8.7724C6.23843 9.01776 6.38552 9.24063 6.57245 9.42756C6.75937 9.61448 6.98225 9.76158 7.22761 9.85997C7.47297 9.95836 7.73572 10.006 8.00001 10C8.26429 10.006 8.52705 9.95836 8.77241 9.85997C9.01777 9.76158 9.24064 9.61448 9.42757 9.42756C9.61449 9.24063 9.76159 9.01776 9.85998 8.7724C9.95837 8.52704 10.006 8.26428 10 8C10.006 7.73572 9.95837 7.47296 9.85998 7.2276C9.76159 6.98224 9.61449 6.75937 9.42757 6.57244C9.24064 6.38552 9.01777 6.23842 8.77241 6.14003C8.52705 6.04164 8.26429 5.99401 8.00001 6Z" />
+          <path d="M14.6524 5.522L13.4721 3.4781C13.3566 3.27775 13.1753 3.12364 12.9589 3.04207C12.7426 2.9605 12.5046 2.95652 12.2857 3.0308L11.0686 3.44245C10.8589 3.30119 10.6397 3.17451 10.4126 3.0633L10.1608 1.804C10.1154 1.57726 9.99295 1.37324 9.81413 1.22665C9.63532 1.08006 9.41123 0.999966 9.18001 1H6.82001C6.58879 0.999966 6.3647 1.08006 6.18588 1.22665C6.00707 1.37324 5.88458 1.57726 5.83926 1.804L5.58741 3.0633C5.35781 3.17331 5.13616 3.29919 4.92406 3.44L3.71436 3.0308C3.49539 2.95652 3.25744 2.9605 3.04109 3.04207C2.82473 3.12364 2.64338 3.27775 2.52796 3.4781L1.34766 5.522C1.23211 5.72224 1.18948 5.95631 1.22703 6.18443C1.26457 6.41254 1.37998 6.62061 1.55361 6.77325L2.51906 7.62165C2.51051 7.74735 2.50001 7.87235 2.50001 8C2.50001 8.1289 2.50501 8.25635 2.51391 8.3828L1.55361 9.2268C1.37998 9.37944 1.26457 9.58751 1.22703 9.81562C1.18948 10.0437 1.23211 10.2778 1.34766 10.4781L2.52796 12.522C2.64338 12.7224 2.82473 12.8765 3.04109 12.958C3.25744 13.0396 3.49539 13.0436 3.71436 12.9693L4.93141 12.5576C5.14108 12.699 5.36027 12.8257 5.58741 12.9368L5.83926 14.1961C5.8846 14.4228 6.0071 14.6268 6.18591 14.7734C6.36472 14.92 6.5888 15 6.82001 15H9.00001V14H6.82001L6.46501 12.2246C5.97398 12.0423 5.51815 11.7765 5.11761 11.4389L3.39391 12.022L2.21391 9.9781L3.57656 8.78055C3.48335 8.2635 3.48217 7.73406 3.57306 7.2166L2.21376 6.022L3.39431 3.9781L5.10766 4.55765C5.51098 4.21985 5.97024 3.95513 6.46471 3.77545L6.82001 2H9.18001L9.53501 3.7754C10.026 3.95776 10.4819 4.22355 10.8824 4.56105L12.6058 3.97805L13.7858 6.02195L12.3869 7.24805L13.0462 8L14.4462 6.7732C14.6198 6.6206 14.7353 6.41255 14.7729 6.18445C14.8104 5.95634 14.7679 5.72226 14.6524 5.522Z" />
+          <path d="M11.5 13.09L10.205 11.795L9.50001 12.5L11.5 14.5L15 11L14.295 10.295L11.5 13.09Z" />
+        </svg>
+      ),
+    },
+    {
+      value: 'light',
+      label: 'Light',
+      icon: (
+        <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="17" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.5 1.51172H7.5V3.99172H8.5V1.51172Z" />
+          <path d="M12.597 3.20343L10.8433 4.95706L11.5504 5.66416L13.3041 3.91054L12.597 3.20343Z" />
+          <path d="M15 8.01172H12.52V9.01172H15V8.01172Z" />
+          <path d="M11.5534 11.3564L10.8463 12.0635L12.5999 13.8171L13.307 13.11L11.5534 11.3564Z" />
+          <path d="M8.5 13.0317H7.5V15.5117H8.5V13.0317Z" />
+          <path d="M4.45197 11.3593L2.69834 13.1129L3.40545 13.82L5.15907 12.0664L4.45197 11.3593Z" />
+          <path d="M3.48 8.01172H1V9.01172H3.48V8.01172Z" />
+          <path d="M3.40253 3.20635L2.69542 3.91346L4.44905 5.66708L5.15615 4.95998L3.40253 3.20635Z" />
+          <path d="M8 6.51172C8.39556 6.51172 8.78224 6.62902 9.11114 6.84878C9.44004 7.06854 9.69638 7.3809 9.84776 7.74635C9.99913 8.1118 10.0387 8.51394 9.96157 8.9019C9.8844 9.28986 9.69392 9.64623 9.41421 9.92593C9.13451 10.2056 8.77814 10.3961 8.39018 10.4733C8.00222 10.5505 7.60009 10.5109 7.23463 10.3595C6.86918 10.2081 6.55682 9.95176 6.33706 9.62286C6.1173 9.29396 6 8.90728 6 8.51172C6 7.98129 6.21071 7.47258 6.58579 7.09751C6.96086 6.72243 7.46957 6.51172 8 6.51172ZM8 5.51172C7.40666 5.51172 6.82664 5.68767 6.33329 6.01731C5.83994 6.34695 5.45542 6.81549 5.22836 7.36367C5.0013 7.91185 4.94189 8.51505 5.05764 9.09699C5.1734 9.67893 5.45912 10.2135 5.87868 10.633C6.29824 11.0526 6.83279 11.3383 7.41473 11.4541C7.99667 11.5698 8.59987 11.5104 9.14805 11.2834C9.69623 11.0563 10.1648 10.6718 10.4944 10.1784C10.8241 9.68508 11 9.10506 11 8.51172C11 7.71607 10.6839 6.95301 10.1213 6.3904C9.55871 5.82779 8.79565 5.51172 8 5.51172Z" />
+        </svg>
+      ),
+    },
+    {
+      value: 'dark',
+      label: 'Dark',
+      icon: (
+        <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="17" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.75126 3.21852C6.52204 4.19713 6.49085 5.21171 6.65953 6.20255C6.82821 7.1934 7.19334 8.1405 7.73346 8.98815C8.27357 9.83579 8.97776 10.5669 9.80458 11.1383C10.6314 11.7098 11.5642 12.1102 12.548 12.3158C12.0307 12.8509 11.4112 13.2767 10.7263 13.5678C10.0413 13.8589 9.30482 14.0094 8.56056 14.0105C8.49131 14.0105 8.42146 14.013 8.35166 14.0105C7.05599 13.9646 5.81731 13.4664 4.85075 12.6023C3.88418 11.7383 3.25081 10.5629 3.06063 9.28047C2.87044 7.99801 3.13547 6.68945 3.80967 5.58206C4.48387 4.47467 5.52466 3.63841 6.75126 3.21852ZM7.49001 2.01172C7.46074 2.01176 7.43153 2.01437 7.40271 2.01952C5.81059 2.30231 4.37942 3.16423 3.38485 4.43924C2.39029 5.71426 1.90269 7.3122 2.01597 8.92527C2.12925 10.5383 2.8354 12.0524 3.9984 13.1759C5.1614 14.2994 6.69899 14.9529 8.31501 15.0104C8.39706 15.0134 8.47911 15.0104 8.56046 15.0104C9.60987 15.0109 10.644 14.7588 11.5754 14.2753C12.5068 13.7918 13.308 13.0911 13.9115 12.2326C13.9604 12.1586 13.9889 12.073 13.9943 11.9845C13.9996 11.8959 13.9815 11.8076 13.9418 11.7283C13.902 11.6489 13.8421 11.5815 13.7681 11.5327C13.694 11.4839 13.6084 11.4555 13.5198 11.4504C12.5209 11.3627 11.5555 11.0466 10.6983 10.5263C9.84106 10.0061 9.11494 9.29572 8.57605 8.45009C8.03716 7.60446 7.69993 6.64624 7.59045 5.64949C7.48096 4.65274 7.60213 3.64416 7.94461 2.70172C7.97375 2.62632 7.98445 2.54504 7.97582 2.46467C7.96719 2.38429 7.93949 2.30714 7.89501 2.23964C7.85054 2.17214 7.79058 2.11624 7.72014 2.07659C7.64969 2.03695 7.57079 2.0147 7.49001 2.01172Z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div
+      role="listbox"
+      className="absolute right-0 top-full mt-1 z-50 w-[15rem] p-4 bg-white dark:bg-[#0d0d0d] border border-gray-200 dark:border-[#4d4d4d] shadow-lg outline-none overflow-hidden"
+      style={{ animation: 'dropdownIn 0.1s ease-out' }}
+    >
+      <style>{`
+        @keyframes dropdownIn {
+          from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+          to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
+
+      {/* ── Main panel ── */}
+      <div
+        className="transition-all duration-100 ease-out"
+        style={{
+          display: panel === 'main' ? 'block' : 'none',
+          opacity: panel === 'main' ? 1 : 0,
+          transform: panel === 'main' ? 'translateX(0)' : 'translateX(-8px)',
+        }}
+      >
+        <ul role="presentation">
+          {/* User info */}
+          <li className="w-full flex items-center mb-2 py-2 px-3">
+            <div className="flex w-full gap-3 items-center">
+              <div className="flex-shrink-0">
+                <UserAvatar svgString={avatarSvg} username={username} size={40} />
+              </div>
+              <div className="flex flex-col min-w-0 text-left">
+                <span className="text-[14px] font-semibold text-gray-900 dark:text-white truncate">{username}</span>
+                <span className="text-[12px] text-gray-400 dark:text-[#b3b3b3] truncate">{email}</span>
+              </div>
+            </div>
+          </li>
+
+          {/* Account settings */}
+          <li role="option">
+            <Link
+              to="/settings"
+              className={baseItemClass + ' flex items-center space-x-2.5 text-gray-700 dark:text-[#e3e3e3]'}
+              onClick={onClose}
+            >
+              <IconSettings2 />
+              <span className="flex-1 text-left truncate">Account settings</span>
+            </Link>
+          </li>
+
+          {/* Theme — opens sub-panel */}
+          <li role="option">
+            <button
+              type="button"
+              className={baseItemClass + ' flex items-center space-x-2.5 text-gray-700 dark:text-[#e3e3e3]'}
+              onClick={() => setPanel('theme')}
+            >
+              <IconTheme />
+              <span className="flex-1 text-left truncate">Theme</span>
+              <IconChevronRight />
+            </button>
+          </li>
+
+          {/* Separator */}
+          <li role="separator" className="px-3 py-2">
+            <div className="w-full h-px bg-gray-200 dark:bg-[#333]" />
+          </li>
+
+          {/* Sign out */}
+          <li role="option">
+            <button
+              type="button"
+              className={baseItemClass + ' flex items-center space-x-2.5 text-gray-700 dark:text-[#e3e3e3]'}
+              onClick={handleSignOut}
+            >
+              <IconSignOut />
+              <span className="flex-1 text-left truncate">Sign out</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      {/* ── Theme sub-panel ── */}
+      <div
+        className="transition-all duration-100 ease-out"
+        style={{
+          display: panel === 'theme' ? 'block' : 'none',
+          opacity: panel === 'theme' ? 1 : 0,
+          transform: panel === 'theme' ? 'translateX(0)' : 'translateX(8px)',
+        }}
+      >
+        <ul role="presentation">
+          {/* Back */}
+          <li>
+            <button
+              type="button"
+              className={backItemClass + ' flex items-center space-x-2.5'}
+              onClick={() => setPanel('main')}
+            >
+              <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 8L10 3L10.7 3.7L6.4 8L10.7 12.3L10 13L5 8Z" />
+              </svg>
+              <span className="flex-1 text-left truncate">Back</span>
+            </button>
+          </li>
+
+          {/* Theme options */}
+          {themeOptions.map(opt => {
+            const isActive = theme === opt.value;
+            return (
+              <li key={opt.value} role="option" aria-selected={isActive}>
+                <button
+                  type="button"
+                  className={isActive ? activeItemClass + ' flex items-center space-x-2.5' : baseItemClass + ' flex items-center space-x-2.5 text-gray-700 dark:text-[#e3e3e3]'}
+                  onClick={() => handleTheme(opt.value)}
+                >
+                  {opt.icon}
+                  <span className="flex-1 text-left truncate">{opt.label}</span>
+                  {isActive && (
+                    <svg fill="currentColor" className="w-4 h-4 shrink-0" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.5 12L2 7.49997L2.707 6.79297L6.5 10.5855L13.293 3.79297L14 4.49997L6.5 12Z" />
+                    </svg>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main component ────────────────────────────────────────────────────────────
+
+
+export default function DashboardHeader() {
+  const location = useLocation();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  function readUser() {
+    try { return JSON.parse(localStorage.getItem('harbor_user') ?? '{}'); }
+    catch { return {}; }
+  }
+
+  const [storedUser, setStoredUser] = useState(readUser);
+  const currentUsername: string  = storedUser.username  ?? '';
+  const currentEmail: string     = storedUser.email     ?? '';
+  const avatarSvg: string | null = storedUser.avatarSvg ?? null;
+
+  // Re-read whenever localStorage changes (e.g. after navigating back from login)
+  useEffect(() => {
+    setStoredUser(readUser());
+    function onStorage() { setStoredUser(readUser()); }
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [location.pathname]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setDropdownOpen(false);
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [dropdownOpen]);
+
+  const routeConfig: Record<string, { label: string; icon: React.ReactNode }> = {
+    '/dashboard':    { label: 'Dashboard',    icon: <IconBlueprints /> },
+    '/projects':     { label: 'Projects',     icon: <IconProjects /> },
+    '/environments': { label: 'Environments', icon: <IconGroups /> },
+    '/deployments':  { label: 'Deployments',  icon: <IconWebhooks /> },
+    '/reports':      { label: 'Reports',      icon: <IconObservability /> },
+    '/settings':     { label: 'Settings',     icon: <IconSettings /> },
+  };
+
+  const currentRoute = routeConfig[location.pathname] || { label: 'Dashboard', icon: <IconBlueprints /> };
+
+  return (
+    <header
+      data-testid="ribbonnav"
+      role="banner"
+      className="sticky top-0 z-[30] w-full flex h-16 pe-3 sm:pe-4 bg-white dark:bg-[#090909] text-gray-900 dark:text-white border-b border-solid border-gray-200 dark:border-[#333] transition-colors duration-300"
+    >
+      {/* Logo + workspace */}
+      <div className="flex-shrink-0 inline-flex items-center sm:gap-x-3 px-3 sm:px-4 h-full border-r border-gray-200 sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] bg-white dark:bg-[#090909] transition-colors duration-300" style={{ width: '294px' }}>
         <div className="inline-flex items-center justify-center h-full sm:border-r border-gray-200 sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] sm:pr-4 gap-x-1 sm:gap-x-0 transition-colors duration-300">
           <a className="flex-shrink-0 flex items-center justify-center w-10 h-10 focus:outline-none" href="/">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" aria-label="Harbor" width="24" height="24" className="fill-gray-900 dark:fill-white transition-colors duration-300">
-              <path d="M26.827.01c-4.596-.216-8.461 3.107-9.12 7.487-.027.203-.066.4-.099.596-1.025 5.454-5.797 9.584-11.53 9.584a11.67 11.67 0 0 1-5.634-1.442.298.298 0 0 0-.444.262v18.854h17.602V22.097c0-2.439 1.971-4.419 4.4-4.419h4.4c4.982 0 8.99-4.15 8.795-9.197C35.02 3.937 31.35.226 26.827.01Z"></path>
-            </svg>
+            <img src="/logos/harbor_light_notext.svg" alt="Harbor" className="w-10 h-10 object-contain dark:hidden" />
+            <img src="/logos/harbor_light_notext.svg" alt="Harbor" className="w-10 h-10 object-contain hidden dark:block" />
           </a>
         </div>
         <div className="w-full inline-flex items-center space-x-2">
@@ -24,19 +374,19 @@ export default function DashboardHeader() {
           </div>
         </div>
       </div>
+
+      {/* Breadcrumb + search */}
       <div className="sm:ps-6 border-r border-gray-200 sm:border-e sm:border-solid sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] flex-grow h-full flex items-center transition-colors duration-300">
         <div className="flex-grow flex items-center justify-between">
           <nav>
             <ol className="flex m-0 p-0">
               <li className="inline-flex items-center text-[15px]">
                 <span className="text-gray-900 dark:text-white flex items-center space-x-2.5 focus:outline-none text-[15px] transition-colors duration-300" aria-current="page">
-                  <svg fill="currentColor" className="shrink-0" width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.65 2.45L8.4 1.1C8.25 1.05 8.15 1 8 1C7.85 1 7.75 1.05 7.65 1.1L5.4 2.45C5.15 2.6 5 2.85 5 3.1V5.9C5 6.15 5.15 6.4 5.35 6.55L7.6 7.9C7.7 7.95 7.85 8 7.95 8C8.05 8 8.2 7.95 8.3 7.9L10.55 6.55C10.75 6.4 10.9 6.2 10.9 5.9V3.1C11 2.85 10.85 2.6 10.65 2.45ZM10 5.75L8 6.95L6 5.75V3.25L8 2.05L10 3.25V5.75Z"></path>
-                    <path d="M14.65 9.45L12.4 8.1C12.25 8.05 12.15 8 12 8C11.85 8 11.75 8.05 11.65 8.1L9.4 9.45C9.2 9.6 9.05 9.8 9.05 10.1V12.9C9.05 13.15 9.2 13.4 9.4 13.55L11.65 14.9C11.75 14.95 11.9 15 12 15C12.1 15 12.25 14.95 12.35 14.9L14.6 13.55C14.8 13.4 14.95 13.2 14.95 12.9V10.1C15 9.85 14.85 9.6 14.65 9.45ZM14 12.75L12 13.95L10 12.75V10.25L12 9.05L14 10.25V12.75Z"></path>
-                    <path d="M6.65 9.45L4.4 8.1C4.25 8.05 4.15 8 4 8C3.85 8 3.75 8.05 3.65 8.1L1.4 9.45C1.15 9.6 1 9.85 1 10.1V12.9C1 13.15 1.15 13.4 1.35 13.55L3.6 14.9C3.75 14.95 3.85 15 4 15C4.15 15 4.25 14.95 4.35 14.9L6.6 13.55C6.8 13.4 6.95 13.2 6.95 12.9V10.1C7 9.85 6.85 9.6 6.65 9.45ZM6 12.75L4 13.95L2 12.75V10.25L4 9.05L6 10.25V12.75Z"></path>
-                  </svg>
+                  <div className="shrink-0 flex items-center justify-center text-current [&>svg]:w-[18px] [&>svg]:h-[18px]">
+                    {currentRoute.icon}
+                  </div>
                   <span>
-                    <span className="whitespace-nowrap sm:text-wrap">Projects</span>
+                    <span className="whitespace-nowrap sm:text-wrap">{currentRoute.label}</span>
                   </span>
                 </span>
               </li>
@@ -63,7 +413,10 @@ export default function DashboardHeader() {
           </div>
         </div>
       </div>
+
+      {/* Right actions */}
       <div className="flex items-center sm:ps-4 sm:gap-2.5 pr-5">
+        {/* New button */}
         <div className="inline-flex relative h-full items-center">
           <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-200 dark:border-[#333] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
             <div className="flex gap-1.5 flex-row items-center">
@@ -74,16 +427,8 @@ export default function DashboardHeader() {
             </div>
           </button>
         </div>
-        <div className="inline-flex relative h-full items-center">
-          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-200 dark:border-[#333] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
-            <div className="flex gap-1.5 flex-row items-center">
-              <svg fill="currentColor" className="w-[18px] h-[18px]" aria-hidden="true" width="18" height="19" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.80502 15.4719C5.7027 15.4287 5.61767 15.3527 5.56335 15.2558C5.50902 15.1589 5.4885 15.0467 5.50502 14.9369L6.41502 9.0119H4.00002C3.92346 9.01396 3.84744 8.9984 3.77785 8.96643C3.70825 8.93446 3.64693 8.88692 3.59861 8.82749C3.5503 8.76806 3.51628 8.69833 3.49918 8.62367C3.48209 8.54902 3.48238 8.47143 3.50002 8.3969L5.00002 1.8969C5.02641 1.78503 5.09054 1.68568 5.18161 1.61555C5.27268 1.54543 5.38512 1.50883 5.50002 1.5119H10.5C10.5747 1.51164 10.6485 1.52813 10.716 1.56014C10.7835 1.59216 10.843 1.63889 10.89 1.6969C10.9377 1.75556 10.9715 1.82429 10.9889 1.89791C11.0062 1.97152 11.0066 2.04811 10.99 2.1219L10.125 6.0119H12.5C12.5937 6.01171 12.6856 6.03786 12.7652 6.08737C12.8447 6.13688 12.9088 6.20775 12.95 6.2919C12.9858 6.37267 12.9996 6.46149 12.99 6.54932C12.9803 6.63715 12.9475 6.72085 12.895 6.7919L6.39502 15.2919C6.35109 15.357 6.29243 15.4109 6.22381 15.4491C6.15518 15.4873 6.07851 15.5088 6.00002 15.5119C5.93312 15.5106 5.86701 15.4971 5.80502 15.4719ZM8.87502 7.0119L9.87502 2.5119H5.90002L4.63002 8.0119H7.58502L6.79002 13.1519L11.5 7.0119H8.87502Z"></path>
-              </svg>
-              <span>Upgrade</span>
-            </div>
-          </button>
-        </div>
+
+        {/* Help button */}
         <div className="inline-flex relative h-full items-center">
           <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-200 dark:border-[#333] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
             <svg fill="currentColor" aria-label="Help" width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -93,12 +438,36 @@ export default function DashboardHeader() {
             </svg>
           </button>
         </div>
-        <div className="inline-flex relative h-full items-center">
-          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
-            <span className="max-w-full inline-flex items-center flex-shrink-0 space-x-1">
-              <span className="flex-shrink-0 flex items-center justify-center w-[22px] h-[22px] text-[12px] font-semibold leading-none rounded-none capitalize bg-yellow-100 text-yellow-700">S</span>
+
+        {/* Profile avatar + dropdown */}
+        <div ref={dropdownRef} className="inline-flex relative h-full items-center">
+          <button
+            id="profile-menu-trigger"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={dropdownOpen}
+            aria-label="Open profile menu"
+            onClick={() => setDropdownOpen(v => !v)}
+            className={
+              'text-[15px] font-medium transition-colors h-9 w-9 p-0 focus:outline-none flex items-center justify-center rounded-none ' +
+              (dropdownOpen
+                ? 'bg-gray-100 dark:bg-[#1a1a1a] text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white')
+            }
+          >
+            <span className="max-w-full inline-flex items-center flex-shrink-0">
+              <UserAvatar svgString={avatarSvg} username={currentUsername} size={36} />
             </span>
           </button>
+
+          {dropdownOpen && (
+            <ProfileDropdown
+              username={currentUsername}
+              email={currentEmail}
+              avatarSvg={avatarSvg}
+              onClose={() => setDropdownOpen(false)}
+            />
+          )}
         </div>
       </div>
     </header>
