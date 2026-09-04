@@ -158,7 +158,7 @@ function ProfileDropdown({
   return (
     <div
       role="listbox"
-      className="absolute right-0 top-full mt-1 z-50 w-[15rem] p-4 bg-white dark:bg-[#0d0d0d] border border-gray-200 dark:border-[#4d4d4d] shadow-lg outline-none overflow-hidden"
+      className="absolute right-0 top-full mt-1 z-50 w-[18rem] p-4 bg-white dark:bg-[#0d0d0d] border border-black dark:border-[#4d4d4d] shadow-none dark:shadow-lg outline-none overflow-hidden"
       style={{ animation: 'dropdownIn 0.1s ease-out' }}
     >
       <style>{`
@@ -185,8 +185,8 @@ function ProfileDropdown({
                 <UserAvatar svgString={avatarSvg} username={username} size={40} />
               </div>
               <div className="flex flex-col min-w-0 text-left">
-                <span className="text-[14px] font-semibold text-gray-900 dark:text-white truncate">{username}</span>
-                <span className="text-[12px] text-gray-400 dark:text-[#b3b3b3] truncate">{email}</span>
+                <span className="text-[15px] font-semibold text-gray-900 dark:text-white truncate">{username}</span>
+                <span className="text-[12px] text-gray-400 dark:text-[#b3b3b3] break-all">{email}</span>
               </div>
             </div>
           </li>
@@ -218,7 +218,7 @@ function ProfileDropdown({
 
           {/* Separator */}
           <li role="separator" className="px-3 py-2">
-            <div className="w-full h-px bg-gray-200 dark:bg-[#333]" />
+            <div className="w-full h-px bg-gray-300 dark:bg-[#4d4d4d]" />
           </li>
 
           {/* Sign out */}
@@ -289,7 +289,13 @@ function ProfileDropdown({
 // ─── Main component ────────────────────────────────────────────────────────────
 
 
-export default function DashboardHeader() {
+export default function DashboardHeader({
+  mobileMenuOpen,
+  onToggleMobileMenu
+}: {
+  mobileMenuOpen?: boolean;
+  onToggleMobileMenu?: () => void;
+} = {}) {
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -349,21 +355,37 @@ export default function DashboardHeader() {
     <header
       data-testid="ribbonnav"
       role="banner"
-      className="sticky top-0 z-[30] w-full flex h-16 pe-3 sm:pe-4 bg-white dark:bg-[#090909] text-gray-900 dark:text-white border-b border-solid border-gray-200 dark:border-[#333] transition-colors duration-300"
+      className="sticky top-0 z-[30] w-full flex h-14 pe-3 sm:pe-4 bg-white dark:bg-[#090909] text-gray-900 dark:text-white border-b border-solid border-gray-300 dark:border-[#4d4d4d] transition-colors duration-300"
     >
       {/* Logo + workspace */}
-      <div className="flex-shrink-0 inline-flex items-center sm:gap-x-3 px-3 sm:px-4 h-full border-r border-gray-200 sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] bg-white dark:bg-[#090909] transition-colors duration-300" style={{ width: '294px' }}>
-        <div className="inline-flex items-center justify-center h-full sm:border-r border-gray-200 sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] sm:pr-4 gap-x-1 sm:gap-x-0 transition-colors duration-300">
-          <a className="flex-shrink-0 flex items-center justify-center w-10 h-10 focus:outline-none" href="/">
-            <img src="/logos/harbor_light_notext.svg" alt="Harbor" className="w-10 h-10 object-contain dark:hidden" />
-            <img src="/logos/harbor_light_notext.svg" alt="Harbor" className="w-10 h-10 object-contain hidden dark:block" />
+      <div className="flex-shrink-0 inline-flex items-center gap-x-4 sm:gap-x-5 px-3 sm:px-4 h-full border-r border-gray-300 sm:border-gray-300 dark:border-[#4d4d4d] dark:sm:border-[#4d4d4d] bg-white dark:bg-[#090909] transition-colors duration-300 w-[260px] md:w-[294px]">
+        <div className="inline-flex items-center justify-center h-full sm:border-r border-gray-300 sm:border-gray-300 dark:border-[#4d4d4d] dark:sm:border-[#4d4d4d] sm:pr-4 gap-x-1 sm:gap-x-0 transition-colors duration-300">
+          <button 
+            type="button" 
+            className="md:hidden flex-shrink-0 flex items-center justify-center w-10 h-10 mr-1 focus:outline-none text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors rounded-md"
+            onClick={onToggleMobileMenu}
+          >
+            {mobileMenuOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
+          </button>
+          <a className="flex-shrink-0 flex items-center justify-center focus:outline-none" href="/">
+            <img src="/logos/harbor_primary.svg" alt="Harbor" className="w-7 h-7 sm:w-8 sm:h-8 object-contain dark:hidden invert" />
+            <img src="/logos/harbor_primary.svg" alt="Harbor" className="w-7 h-7 sm:w-8 sm:h-8 object-contain hidden dark:block" />
           </a>
         </div>
         <div className="w-full inline-flex items-center space-x-2">
           <div className="inline-flex relative items-center h-auto">
             <button data-testid="workspace-switcher" type="button" className="h-10 focus:outline-none flex items-center p-1.5 bg-transparent text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors rounded-none" style={{ maxWidth: '240px' }}>
               <div className="flex items-center space-x-2.5 h-10 text-[15px] overflow-x-hidden">
-                <span className="flex-shrink-0 flex items-center justify-center w-7 h-7 text-[15px] font-semibold leading-none rounded-none capitalize bg-green-100 text-green-700">M</span>
                 <span className="truncate" title="My Workspace">My Workspace</span>
                 <svg fill="currentColor" aria-hidden="true" className="flex-shrink-0 w-4 h-4" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 14L4.5 10.5L5.205 9.795L8 12.585L10.795 9.795L11.5 10.5L8 14Z"></path>
@@ -376,7 +398,7 @@ export default function DashboardHeader() {
       </div>
 
       {/* Breadcrumb + search */}
-      <div className="sm:ps-6 border-r border-gray-200 sm:border-e sm:border-solid sm:border-gray-200 dark:border-[#333] dark:sm:border-[#333] flex-grow h-full flex items-center transition-colors duration-300">
+      <div className="hidden sm:flex sm:ps-6 border-r border-gray-300 sm:border-e sm:border-solid sm:border-gray-300 dark:border-[#4d4d4d] dark:sm:border-[#4d4d4d] flex-grow h-full items-center transition-colors duration-300">
         <div className="flex-grow flex items-center justify-between">
           <nav>
             <ol className="flex m-0 p-0">
@@ -400,7 +422,7 @@ export default function DashboardHeader() {
                 </svg>
               </div>
               Search
-              <kbd className="inline-flex items-center space-x-1 px-1 py-0.5 h-[22px] w-fit text-[12px] font-mono font-medium leading-none text-gray-500 dark:text-[#a1a1aa] bg-gray-100 dark:bg-[#1a1a1a] border border-gray-300 dark:border-[#333] ms-2.5 rounded-none transition-colors duration-300">
+              <kbd className="inline-flex items-center space-x-1 px-1 py-0.5 h-[22px] w-fit text-[12px] font-mono font-medium leading-none text-gray-500 dark:text-[#a1a1aa] bg-gray-100 dark:bg-[#1a1a1a] border border-gray-300 dark:border-[#4d4d4d] ms-2.5 rounded-none transition-colors duration-300">
                 <svg aria-hidden="true" width="8" height="5" viewBox="0 0 7 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor" d="M0.564 3.72L3.132 0.42H4.08L6.636 3.72H5.568L3.612 1.296H3.588L1.644 3.72H0.564Z"></path>
                 </svg>
@@ -415,10 +437,19 @@ export default function DashboardHeader() {
       </div>
 
       {/* Right actions */}
-      <div className="flex items-center sm:ps-4 sm:gap-2.5 pr-5">
+      <div className="flex items-center sm:ps-4 sm:gap-2.5 gap-1 ml-auto">
+        {/* Mobile Search button */}
+        <div className="inline-flex sm:hidden relative h-full items-center">
+          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white transition-colors h-9 w-9 p-0 focus:outline-none flex items-center justify-center rounded-none">
+            <svg fill="currentColor" aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.5 13.7931L10.7239 10.017C11.6313 8.9277 12.0838 7.5305 11.9872 6.11608C11.8907 4.70165 11.2525 3.37891 10.2055 2.423C9.15855 1.4671 7.78335 0.951637 6.366 0.983845C4.94865 1.01605 3.59828 1.59345 2.59581 2.59593C1.59333 3.5984 1.01593 4.94877 0.983723 6.36612C0.951515 7.78347 1.46698 9.15867 2.42288 10.2057C3.37879 11.2526 4.70153 11.8908 6.11596 11.9873C7.53038 12.0839 8.92758 11.6314 10.0169 10.7241L13.7929 14.5001L14.5 13.7931ZM2 6.50012C2 5.6101 2.26392 4.74007 2.75838 4.00005C3.25285 3.26003 3.95565 2.68325 4.77792 2.34266C5.60019 2.00207 6.50499 1.91295 7.3779 2.08658C8.25082 2.26022 9.05264 2.6888 9.68198 3.31814C10.3113 3.94747 10.7399 4.7493 10.9135 5.62221C11.0872 6.49513 10.998 7.39993 10.6575 8.22219C10.3169 9.04446 9.74008 9.74726 9.00006 10.2417C8.26004 10.7362 7.39001 11.0001 6.5 11.0001C5.30693 10.9988 4.1631 10.5243 3.31948 9.68064C2.47585 8.83701 2.00132 7.69319 2 6.50012Z"></path>
+            </svg>
+          </button>
+        </div>
+
         {/* New button */}
-        <div className="inline-flex relative h-full items-center">
-          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-200 dark:border-[#333] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
+        <div className="hidden sm:inline-flex relative h-full items-center">
+          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-300 dark:border-[#4d4d4d] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
             <div className="flex gap-1.5 flex-row items-center">
               <svg fill="currentColor" className="w-[18px] h-[18px]" aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.5 7.5V2.5H7.5V7.5H2.5V8.5H7.5V13.5H8.5V8.5H13.5V7.5H8.5Z"></path>
@@ -429,8 +460,8 @@ export default function DashboardHeader() {
         </div>
 
         {/* Help button */}
-        <div className="inline-flex relative h-full items-center">
-          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-200 dark:border-[#333] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
+        <div className="hidden sm:inline-flex relative h-full items-center">
+          <button type="button" className="text-[15px] font-medium text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white border border-solid border-gray-300 dark:border-[#4d4d4d] transition-colors h-9 py-1.5 px-3 focus:outline-none flex items-center rounded-none">
             <svg fill="currentColor" aria-label="Help" width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 1C6.61553 1 5.26216 1.41054 4.11101 2.17971C2.95987 2.94888 2.06266 4.04213 1.53285 5.32122C1.00303 6.6003 0.86441 8.00776 1.13451 9.36563C1.4046 10.7235 2.07129 11.9708 3.05026 12.9497C4.02922 13.9287 5.2765 14.5954 6.63437 14.8655C7.99224 15.1356 9.3997 14.997 10.6788 14.4672C11.9579 13.9373 13.0511 13.0401 13.8203 11.889C14.5895 10.7378 15 9.38447 15 8C15 6.14348 14.2625 4.36301 12.9497 3.05025C11.637 1.7375 9.85652 1 8 1ZM8 14C6.81332 14 5.65328 13.6481 4.66658 12.9888C3.67989 12.3295 2.91085 11.3925 2.45673 10.2961C2.0026 9.19974 1.88378 7.99334 2.11529 6.82946C2.3468 5.66557 2.91825 4.59647 3.75736 3.75736C4.59648 2.91824 5.66558 2.3468 6.82946 2.11529C7.99335 1.88378 9.19975 2.0026 10.2961 2.45672C11.3925 2.91085 12.3295 3.67988 12.9888 4.66658C13.6481 5.65327 14 6.81331 14 8C14 9.5913 13.3679 11.1174 12.2426 12.2426C11.1174 13.3679 9.5913 14 8 14Z"></path>
               <path d="M8 12.5C8.41422 12.5 8.75 12.1642 8.75 11.75C8.75 11.3358 8.41422 11 8 11C7.58579 11 7.25 11.3358 7.25 11.75C7.25 12.1642 7.58579 12.5 8 12.5Z"></path>
@@ -455,7 +486,7 @@ export default function DashboardHeader() {
                 : 'text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] hover:text-gray-900 dark:hover:text-white')
             }
           >
-            <span className="max-w-full inline-flex items-center flex-shrink-0">
+            <span className="max-w-full inline-flex items-center flex-shrink-0 scale-[0.85] sm:scale-100 origin-center transition-transform">
               <UserAvatar svgString={avatarSvg} username={currentUsername} size={36} />
             </span>
           </button>

@@ -13,7 +13,7 @@ export default function Navbar() {
   const isLoggedIn = !!localStorage.getItem('harbor_token');
 
   return (
-    <nav className="w-full bg-white dark:bg-[#0b0b0b] text-[15px] lg:text-[16px] leading-[112%] text-gray-900 dark:text-white pl-4 lg:pl-6 flex items-stretch justify-between border-b border-black dark:border-gray-800 h-[47px] lg:h-[66px] transition-colors duration-300">
+    <nav className="w-full bg-white dark:bg-[#0b0b0b] text-[15px] lg:text-[16px] leading-[112%] text-gray-900 dark:text-white pl-4 lg:pl-6 flex items-stretch justify-between border-b border-black dark:border-white h-[47px] lg:h-[66px] transition-colors duration-300">
       {/* Left side */}
       <div className="flex items-center lg:gap-8">
         {/* Mobile menu button */}
@@ -26,9 +26,9 @@ export default function Navbar() {
         </button>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src="/logos/harbor_light_notext.svg" alt="Harbor Logo" className="h-5 lg:h-10 w-auto group-hover:opacity-80 transition-opacity" />
-          <span className="text-xl lg:text-2xl font-medium tracking-tight text-gray-900 dark:text-white transition-colors duration-300">Harbor™</span>
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <img src="/logos/harbor_primary.svg" alt="Harbor Logo" className="h-7 lg:h-10 w-auto group-hover:opacity-80 transition-opacity dark:invert-0 invert" />
+          <span className="text-2xl lg:text-4xl font-medium tracking-tight text-gray-900 dark:text-white transition-colors duration-300 lowercase" style={{ fontFamily: 'Roobert, sans-serif' }}>harbor</span>
         </Link>
 
 

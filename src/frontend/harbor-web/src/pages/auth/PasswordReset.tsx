@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function PasswordReset() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ export default function PasswordReset() {
                     <input 
                       type="email" 
                       required
-                      className="h-12 w-full bg-transparent border border-black dark:border-[#6b6b6b] text-black dark:text-[#f0f0f0] pl-10 pr-3 focus:outline-none focus:border-black dark:focus:border-[#f0f0f0] focus:ring-1 focus:ring-black dark:focus:ring-[#f0f0f0] transition-colors placeholder:text-gray-400 dark:placeholder:text-[#8f8f8f]" 
+                      className="h-10 w-full bg-transparent border border-black dark:border-[#6b6b6b] text-black dark:text-[#f0f0f0] pl-10 pr-3 focus:outline-none focus:border-black dark:focus:border-[#f0f0f0] focus:ring-1 focus:ring-black dark:focus:ring-[#f0f0f0] transition-colors placeholder:text-gray-400 dark:placeholder:text-[#8f8f8f]" 
                       placeholder="your@email.com"
                     />
                   </div>
@@ -42,7 +44,7 @@ export default function PasswordReset() {
                 
                 <button 
                   type="submit" 
-                  className="group relative h-12 w-full bg-black dark:bg-white text-white dark:text-black font-medium text-[16px] hover:text-white transition-colors duration-300 overflow-hidden flex items-center justify-center mt-4"
+                  className="group relative h-10 w-full bg-black dark:bg-white text-white dark:text-black font-medium text-[16px] hover:text-white transition-colors duration-300 overflow-hidden flex items-center justify-center mt-4"
                 >
                   <div className="absolute inset-0 w-full h-full bg-[#2563eb] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out z-[0]"></div>
                   <span className="relative z-[1]">Reset Password</span>
@@ -61,7 +63,18 @@ export default function PasswordReset() {
               <p className="text-[17px] text-black dark:text-[#f0f0f0] transition-colors duration-300">
                 Follow the link in the email to reset your password.
               </p>
-              
+              {error && (
+                <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 transition-colors duration-300 mt-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <p>{error}</p>
+                </div>
+              )}
+              {successMessage && (
+                <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 transition-colors duration-300 mt-2">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <p>{successMessage}</p>
+                </div>
+              )}
               <div className="pt-4">
                 <Link to="/login" className="text-[#2563eb] hover:underline font-medium text-[15px]">
                   &larr; Back to sign in

@@ -48,13 +48,6 @@ namespace Harbor.Authentication.Services
                 return (false, "Email address is not valid.", null);
             }
 
-
-            var allowedRoles = new[] { Models.Roles.Developer, Models.Roles.Viewer };
-            if (!allowedRoles.Contains(request.Role))
-            {
-                return (false, "Role must be either Developer or Viewer.", null);
-            }
-
             var existing = await _userRepository.GetByUsernameOrEmailAsync(request.Username, request.Email);
             if (existing != null)
             {
@@ -69,7 +62,7 @@ namespace Harbor.Authentication.Services
                 Username = request.Username,
                 Email = request.Email,
                 PasswordHash = passwordHash,
-                Role = request.Role,
+                Role = Models.Roles.User,
                 AvatarSvg = avatarSvg
             };
 
@@ -107,10 +100,10 @@ namespace Harbor.Authentication.Services
         {
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             {
-                return (false, "Username and password are required.", null);
+                return (false, "Username or email and password are required.", null);
             }
 
-            var user = await _userRepository.GetByUsernameAsync(request.Username);
+            var user = await _userRepository.GetByUsernameOrEmailAsync(request.Username, request.Username);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
