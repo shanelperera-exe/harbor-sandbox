@@ -28,6 +28,23 @@ if (!string.IsNullOrEmpty(connectionStringBuilder.Host))
     builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionStringBuilder.ConnectionString));
 }
 
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontendOrigins",
+        b => b.WithOrigins("http://localhost:5173", "http://localhost:5174")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials());
+    options.AddDefaultPolicy(
+        b => b.WithOrigins("http://localhost:5173", "http://localhost:5174")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,11 +54,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowFrontendOrigins");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapReverseProxy();
 
 // Database Health Check Endpoint
 app.MapGet("/health", async ([Microsoft.AspNetCore.Mvc.FromServices] NpgsqlDataSource dataSource) =>
