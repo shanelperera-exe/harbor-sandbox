@@ -95,7 +95,7 @@ jobs:
     - name: Start Frontend Server (Background)
       working-directory: ./src/frontend
       run: |
-        npm run dev -- --port 5173 &
+        VITE_API_BASE_URL=http://localhost:5053/api npm run dev -- --port 5173 &
 
         for i in $(seq 1 30); do
           if curl -sf -o /dev/null "http://localhost:5173/"; then
